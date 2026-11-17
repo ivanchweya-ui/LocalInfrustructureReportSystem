@@ -1,0 +1,7 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Update Report</title><link rel="stylesheet" href="css/style.css"></head><body>
+<header><h1>Local Infrastructure Issue Reporter</h1><nav><a href="dashboard.html">Dashboard</a><button type="button" onclick="logout()">Log out</button></nav></header>
+<main><p class="hint"><a href="dashboard.html">Dashboard</a> &gt; Report <span id="ref"></span></p>
+<div class="card" id="details"></div>
+<div class="card"><h3>Update status</h3><form id="f"><label>New status<select id="new_status" name="new_status"></select></label><label>Progress / resolution note<textarea name="note" rows="3" placeholder="Add a short note the resident can see..."></textarea></label><button type="submit">Save Update</button><a href="dashboard.html"><button type="button" class="alt">Cancel</button></a></form><div id="msg"></div></div>
+<div class="card"><h3>Status history</h3><ul id="hist"></ul></div></main>
+<script src="js/common.js"></script><script src="js/update.js"></script></body></html>
