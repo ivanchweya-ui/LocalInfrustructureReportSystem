@@ -1,15 +1,55 @@
 DROP DATABASE IF EXISTS local_infra_db;
 CREATE DATABASE local_infra_db CHARACTER SET utf8mb4;
 USE local_infra_db;
-CREATE TABLE categories (category_id INT AUTO_INCREMENT PRIMARY KEY, category_name VARCHAR(50) NOT NULL UNIQUE);
-CREATE TABLE areas (area_id INT AUTO_INCREMENT PRIMARY KEY, area_name VARCHAR(80) NOT NULL, region VARCHAR(80) NOT NULL, latitude DECIMAL(9,6) NULL, longitude DECIMAL(9,6) NULL, UNIQUE (area_name, region));
-CREATE TABLE staff (staff_id INT AUTO_INCREMENT PRIMARY KEY, full_name VARCHAR(100) NOT NULL, username VARCHAR(50) NOT NULL UNIQUE, password_hash VARCHAR(255) NOT NULL, email VARCHAR(100));
-CREATE TABLE reports (report_id INT AUTO_INCREMENT PRIMARY KEY, reference_code VARCHAR(20) NOT NULL UNIQUE, category_id INT NOT NULL, area_id INT NOT NULL, description TEXT NOT NULL, landmark VARCHAR(150), photo_path VARCHAR(255), contact_method ENUM('email','phone','whatsapp') NOT NULL, contact_detail VARCHAR(100) NOT NULL, current_status ENUM('Submitted','Under Review','In Progress','Resolved') NOT NULL DEFAULT 'Submitted', date_submitted DATETIME DEFAULT CURRENT_TIMESTAMP, date_updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, FOREIGN KEY (category_id) REFERENCES categories(category_id), FOREIGN KEY (area_id) REFERENCES areas(area_id));
-CREATE TABLE status_updates (update_id INT AUTO_INCREMENT PRIMARY KEY, report_id INT NOT NULL, staff_id INT NULL, old_status VARCHAR(20), new_status VARCHAR(20) NOT NULL, resolution_note TEXT, updated_at DATETIME DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (report_id) REFERENCES reports(report_id) ON DELETE CASCADE, FOREIGN KEY (staff_id) REFERENCES staff(staff_id));
-INSERT INTO categories (category_name) VALUES ('Pothole'),('Streetlight'),('Water leak'),('Blocked drain'),('Garbage'),('Other');
-INSERT INTO areas (area_name, region, latitude, longitude) VALUES ('Kasarani','Nairobi',-1.2200,36.8970),('Mwiki','Nairobi',-1.2050,36.9100),('Githurai','Nairobi',-1.2020,36.9140),('Eastlands','Nairobi',-1.2850,36.8650),('Embakasi','Nairobi',-1.3180,36.9040);
-INSERT INTO reports (reference_code,category_id,area_id,description,landmark,contact_method,contact_detail,current_status) VALUES
-('RF-2026-DEMO01',1,2,'Large pothole on the main road damaging vehicles','Near the mosque, Mwiki Road','phone','0712345678','In Progress'),
-('RF-2026-DEMO02',2,1,'Streetlight has not worked for two weeks','Opposite the market','email','resident@example.com','Submitted'),
-('RF-2026-DEMO03',3,3,'Water leaking from the main pipe into the road','Behind the primary school','whatsapp','0723456789','Under Review');
-INSERT INTO status_updates (report_id,old_status,new_status,resolution_note) VALUES (1,NULL,'Submitted','Report received'),(1,'Submitted','Under Review','Checked by officer'),(1,'Under Review','In Progress','Repair crew scheduled'),(2,NULL,'Submitted','Report received'),(3,NULL,'Submitted','Report received'),(3,'Submitted','Under Review','Checked by officer');
+
+CREATE TABLE categories (
+    category_id INT AUTO_INCREMENT PRIMARY KEY,
+    category_name VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE areas (
+    area_id INT AUTO_INCREMENT PRIMARY KEY,
+    area_name VARCHAR(80) NOT NULL,
+    region VARCHAR(80) NOT NULL,
+    location VARCHAR(150) NOT NULL,
+    latitude DECIMAL(9,6) NULL,
+    longitude DECIMAL(9,6) NULL,
+    UNIQUE (area_name, region)
+);
+
+CREATE TABLE staff (
+    staff_id INT AUTO_INCREMENT PRIMARY KEY,
+    full_name VARCHAR(100) NOT NULL,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    email VARCHAR(100)
+);
+
+CREATE TABLE reports (
+    report_id INT AUTO_INCREMENT PRIMARY KEY,
+    reference_code VARCHAR(20) NOT NULL UNIQUE,
+    category_id INT NOT NULL,
+    area_id INT NOT NULL,
+    description TEXT NOT NULL,
+    landmark VARCHAR(150),
+    photo_path VARCHAR(255),
+    contact_method ENUM('email','phone','whatsapp') NOT NULL,
+    contact_detail VARCHAR(100) NOT NULL,
+    current_status ENUM('Submitted','Under Review','In Progress','Resolved') NOT NULL DEFAULT 'Submitted',
+    date_submitted DATETIME DEFAULT CURRENT_TIMESTAMP,
+    date_updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (category_id) REFERENCES categories(category_id),
+    FOREIGN KEY (area_id) REFERENCES areas(area_id)
+);
+
+CREATE TABLE status_updates (
+    update_id INT AUTO_INCREMENT PRIMARY KEY,
+    report_id INT NOT NULL,
+    staff_id INT NULL,
+    old_status VARCHAR(20),
+    new_status VARCHAR(20) NOT NULL,
+    resolution_note TEXT,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (report_id) REFERENCES reports(report_id) ON DELETE CASCADE,
+    FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
+);

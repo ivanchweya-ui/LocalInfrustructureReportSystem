@@ -1,7 +1,7 @@
 async function loadOptions() {
   const o = await api('php/options.php');
   fillSelect($('fc'), o.categories || [], 'category_id', 'category_name', 'All categories');
-  fillSelect($('fa'), o.areas || [], 'area_id', a => a.area_name + ' (' + a.region + ')', 'All areas');
+  fillSelect($('fa'), o.areas || [], 'area_id', a => a.area_name + ' (' + a.region + ' - ' + a.location + ')', 'All areas');
 }
 async function load() {
   const q = new URLSearchParams({ category: $('fc').value, area: $('fa').value, status: $('fs').value });

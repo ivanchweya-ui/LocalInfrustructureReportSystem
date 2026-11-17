@@ -1,7 +1,7 @@
 (async () => {
   const o = await api('php/options.php');
   fillSelect($('category_id'), o.categories || [], 'category_id', 'category_name', 'Select category...');
-  fillSelect($('area_id'), o.areas || [], 'area_id', a => a.area_name + ' (' + a.region + ')', 'Select area...');
+  fillSelect($('area_id'), o.areas || [], 'area_id', a => a.area_name + ' (' + a.region + ' - ' + a.location + ')', 'Select area...');
 })();
 $('f').addEventListener('submit', async e => {
   e.preventDefault();

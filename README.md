@@ -7,4 +7,15 @@ Stack: HTML/CSS/JS, PHP, MySQL (XAMPP).
 3. Link the folder into htdocs and open http://localhost/infra_report/report.html
 
 Staff login: officer1 / Officer@123
-Demo codes: RF-2026-DEMO01, DEMO02, DEMO03
+Demo codes: RF-2026-DEMO01 through RF-2026-DEMO06
+
+## Demo behavior
+- Demo reports and contact details are fictional sample data, not real resident submissions.
+- Submitting a report shows the generated code. The app records a simulated delivery attempt in `logs/notifications.log`; it does not send email, SMS, or WhatsApp messages. Real delivery is future work.
+- Report photos are uploaded to the server's `uploads/` folder; MySQL stores the relative file path, not the image bytes. This follows the documented design.
+- Staff can add an area using its ward/area name, region, and a text location description. No map or GPS integration is included.
+
+The seed wards Clay City, Mwiki, Kasarani, Njiru, and Ruai are listed for Kasarani Constituency in the [Kasarani Constituency reference](https://en.wikipedia.org/wiki/Kasarani_Constituency#Wards), which cites Kenya National Bureau of Statistics census material.
+
+## Existing database
+`database/install.php` drops and recreates `local_infra_db`. Do not rerun it if you need to preserve existing data. For an existing installation, import `database/migrate_area_location.sql` and then `database/seed.sql` in phpMyAdmin; the seed skips existing reference codes and status steps.

@@ -25,7 +25,9 @@ if (!$st->execute()) out(['success'=>false,'message'=>'Could not save the report
 $id=$st->insert_id;
 $h=$db->prepare("INSERT INTO status_updates (report_id,new_status,resolution_note) VALUES (?,'Submitted','Report received')");
 $h->bind_param('i',$id); $h->execute();
-// Code delivery: the message is queued in logs/notifications.log.
-// To send for real, replace this line with an email/SMS/WhatsApp provider call.
-file_put_contents(__DIR__.'/../logs/notifications.log',date('Y-m-d H:i:s')." | $method | $detail | $code\n",FILE_APPEND);
-out(['success'=>true,'code'=>$code,'message'=>"A message with your code is queued for delivery by $method to $detail."]);
+$message="Demo only: your code was not actually sent by $method to $detail. Real message delivery is the next step.";
+$log=date('Y-m-d H:i:s')." | DEMO ONLY - not sent | simulated send via $method to $detail | code $code\n";
+if (file_put_contents(__DIR__.'/../logs/notifications.log',$log,FILE_APPEND)===false) {
+  $message.=' The local demo notification log could not be written.';
+}
+out(['success'=>true,'code'=>$code,'message'=>$message],201);
