@@ -1,0 +1,10 @@
+<?php require __DIR__.'/helpers.php'; need_staff();
+$name=clean($_POST['area_name']??''); $reg=clean($_POST['region']??'');
+$lat=clean($_POST['latitude']??''); $lng=clean($_POST['longitude']??'');
+if ($name===''||$reg==='') out(['success'=>false,'message'=>'Area name and region are required'],422);
+if (($lat!==''&&!is_numeric($lat))||($lng!==''&&!is_numeric($lng))) out(['success'=>false,'message'=>'Latitude and longitude must be numbers'],422);
+$la=$lat===''?null:(float)$lat; $lo=$lng===''?null:(float)$lng;
+$st=$db->prepare("INSERT INTO areas (area_name,region,latitude,longitude) VALUES (?,?,?,?)");
+$st->bind_param('ssdd',$name,$reg,$la,$lo);
+if (!$st->execute()) out(['success'=>false,'message'=>'That area already exists in this region'],409);
+out(['success'=>true,'message'=>'Area added']);

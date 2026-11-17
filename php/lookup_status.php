@@ -1,0 +1,11 @@
+<?php require __DIR__.'/helpers.php';
+$code=strtoupper(clean($_GET['code']??''));
+if ($code==='') out(['success'=>false,'message'=>'Enter a reference code'],422);
+$st=$db->prepare("SELECT r.report_id,r.reference_code,c.category_name,a.area_name,r.landmark,r.current_status,DATE_FORMAT(r.date_submitted,'%d %b %Y') AS date_submitted FROM reports r JOIN categories c USING(category_id) JOIN areas a USING(area_id) WHERE r.reference_code=?");
+$st->bind_param('s',$code); $st->execute(); $rep=$st->get_result()->fetch_assoc();
+if (!$rep) out(['success'=>false,'message'=>'Report not found'],404);
+$h=$db->prepare("SELECT new_status,resolution_note,DATE_FORMAT(updated_at,'%d %b %H:%i') AS updated_at FROM status_updates WHERE report_id=? ORDER BY update_id");
+$h->bind_param('i',$rep['report_id']); $h->execute();
+$rep['history']=$h->get_result()->fetch_all(MYSQLI_ASSOC);
+unset($rep['report_id']);
+out(['success'=>true,'report'=>$rep]);
