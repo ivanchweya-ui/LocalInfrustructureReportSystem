@@ -22,9 +22,8 @@ Demo database
 The current local MySQL database is named local_infra_db and was created
 from the command prompt for the demonstration. The phpMyAdmin snapshot provided for this document shows five tables:
 areas, categories, reports, staff, and status_updates. The demo setup
-contains 5 Kasarani areas, 6 categories, 7 reports, 1 staff account, and
-16 status updates as of the demo data update. Counts may change as the demo
-data is used.
+contains sample areas, categories, reports, one staff account, and report
+status history. Counts may change as the demo data is used.
 
 System boundary
 ---------------
@@ -47,14 +46,12 @@ submitted. For example, a report submitted through the Karen system cannot
 be found by entering its reference code in the Kasarani system. Moving to a
 different region does not transfer the report or make it visible there.
 
-For this presentation, the one regional setup is Kasarani Sub-County.
-Sample residents are assumed to have visited the Sub-County Administrator's
-physical office, learned about the system, and submitted reports from their
-own devices. The sample reports cover multiple areas within Kasarani
-Sub-County.
-
-The current demo represents one local setup using its demonstration
-database. It does not demonstrate multiple regional installations.
+The current app is an incomplete working system populated with sample data.
+The sample areas and reports illustrate the workflow; they do not establish
+which real region or administrator has adopted the system. The intended
+deployment region and its administrator must be confirmed for an actual
+installation. The current app does not demonstrate multiple regional
+installations.
 
 In a real operational process, a Sub-County Administrator may coordinate
 with the appropriate County Department using the County's existing process
@@ -75,11 +72,8 @@ Users and responsibilities
 2. Sub-County Administrator
    - Is the only staff role represented in the current demo.
    - Logs in using the existing demonstration staff account.
-   - The demo display name is Charles Mutinda (Demo), based on a past
-     Nairobi City County event report identifying Charles Mutinda as
-     Kasarani Sub-County Administrator at that time. This is not his real
-     account or an endorsement, and does not assert that he currently holds
-     the role.
+   - The existing sample account is named "Ward Officer"; it is not an
+     account belonging to a named real administrator.
    - Reviews incoming reports for completeness and the correct location and
      issue category.
    - Updates the report status and adds an appropriate resident-facing note.
@@ -153,9 +147,8 @@ generic staff login.
 
 The intended Sub-County Administrator workflow is not fully represented in
 the current implementation:
-- The demo staff display name is "Charles Mutinda (Demo)"; the staff schema
-  does not define a separate role field or associate accounts with a
-  sub-county.
+- The sample staff account is named "Ward Officer"; the staff schema does
+  not define a separate role field or associate accounts with a sub-county.
 - Reports are not assigned to a named Sub-County Administrator. Department
   assignment and follow-up are outside the application and are not tracked
   as internal work orders.

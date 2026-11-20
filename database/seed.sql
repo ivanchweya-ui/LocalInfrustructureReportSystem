@@ -9,11 +9,11 @@ INSERT IGNORE INTO categories (category_name) VALUES
     ('Other');
 
 INSERT INTO areas (area_name, region, location, latitude, longitude) VALUES
-    ('Clay City', 'Nairobi', 'Kasarani Sub-County', NULL, NULL),
-    ('Mwiki', 'Nairobi', 'Kasarani Sub-County', NULL, NULL),
-    ('Kasarani', 'Nairobi', 'Kasarani Sub-County', NULL, NULL),
-    ('Njiru', 'Nairobi', 'Kasarani Sub-County', NULL, NULL),
-    ('Ruai', 'Nairobi', 'Kasarani Sub-County', NULL, NULL)
+    ('Clay City', 'Nairobi', 'Kasarani Constituency', NULL, NULL),
+    ('Mwiki', 'Nairobi', 'Kasarani Constituency', NULL, NULL),
+    ('Kasarani', 'Nairobi', 'Kasarani Constituency', NULL, NULL),
+    ('Njiru', 'Nairobi', 'Njiru Sub-county', NULL, NULL),
+    ('Ruai', 'Nairobi', 'Njiru Sub-county', NULL, NULL)
 ON DUPLICATE KEY UPDATE location = VALUES(location);
 
 INSERT IGNORE INTO reports
@@ -74,7 +74,7 @@ WHERE r.reference_code IN ('RF-2026-DEMO01', 'RF-2026-DEMO02', 'RF-2026-DEMO03',
   );
 
 INSERT INTO status_updates (report_id, staff_id, old_status, new_status, resolution_note)
-SELECT report_id, NULL, 'Submitted', 'Under Review', 'Demo: checked by Sub-County Administrator'
+SELECT report_id, NULL, 'Submitted', 'Under Review', 'Demo: checked by ward staff'
 FROM reports WHERE reference_code IN ('RF-2026-DEMO01', 'RF-2026-DEMO03', 'RF-2026-DEMO05', 'RF-2026-DEMO06')
   AND NOT EXISTS (
       SELECT 1 FROM status_updates u
