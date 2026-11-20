@@ -47,11 +47,13 @@ be found by entering its reference code in the Kasarani system. Moving to a
 different region does not transfer the report or make it visible there.
 
 The current app is an incomplete working system populated with sample data.
-The sample areas and reports illustrate the workflow; they do not establish
-which real region or administrator has adopted the system. The intended
-deployment region and its administrator must be confirmed for an actual
-installation. The current app does not demonstrate multiple regional
-installations.
+For the presentation, four extra reports represent four different residents
+in the Kasarani regional setup and are identifiable by reference codes
+RF-2026-KS01 through RF-2026-KS04. They use the existing Kasarani, Mwiki,
+and Clay City area entries and are added alongside the other sample/test
+records without deleting them. This presentation data does not establish
+which real region or administrator has adopted the system. The current app
+does not demonstrate multiple regional installations.
 
 In a real operational process, a Sub-County Administrator may coordinate
 with the appropriate County Department using the County's existing process
@@ -72,8 +74,8 @@ Users and responsibilities
 2. Sub-County Administrator
    - Is the only staff role represented in the current demo.
    - Logs in using the existing demonstration staff account.
-   - The existing sample account is named "Ward Officer"; it is not an
-     account belonging to a named real administrator.
+   - The demo account display name is "Sub-County Administrator (Demo)";
+     it is not an account belonging to a named real administrator.
    - Reviews incoming reports for completeness and the correct location and
      issue category.
    - Updates the report status and adds an appropriate resident-facing note.
