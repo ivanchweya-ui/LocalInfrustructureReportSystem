@@ -23,10 +23,4 @@ async function load() {
 }
 $('apply').onclick = load;
 $('reset').onclick = () => { $('fc').value = ''; $('fa').value = ''; $('fs').value = ''; load(); };
-$('af').addEventListener('submit', async e => {
-  e.preventDefault();
-  const d = await api('php/add_area.php', { method: 'POST', body: new FormData(e.target) });
-  show('amsg', d.message || 'Failed', d.success);
-  if (d.success) { e.target.reset(); loadOptions(); }
-});
 loadOptions().then(load);

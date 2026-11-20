@@ -1,0 +1,183 @@
+LOCAL INFRASTRUCTURE ISSUE REPORTER
+SYSTEM SCOPE AND WORKFLOW
+
+Purpose
+-------
+This document records the agreed purpose and scope of the current working
+demo of the Local Infrastructure Issue Reporter. It clarifies the intended
+users and workflow beyond the generic "Ward Staff" role in the earlier
+system design.
+
+The demo represents a communication and tracking channel between residents
+and Sub-County Administrators. Residents can report local infrastructure
+problems and check progress. Sub-County Administrators can review reports
+and record status updates.
+
+The current application is a working demonstration, not a complete deployed
+County system. Its sample database and demo staff account are used for the
+presentation. Features needed for a real deployment can be developed later.
+
+Demo database
+-------------
+The current local MySQL database is named local_infra_db and was created
+from the command prompt for the demonstration. The phpMyAdmin snapshot provided for this document shows five tables:
+areas, categories, reports, staff, and status_updates. The demo setup
+contains 5 Kasarani areas, 6 categories, 7 reports, 1 staff account, and
+16 status updates as of the demo data update. Counts may change as the demo
+data is used.
+
+System boundary
+---------------
+The system manages the resident-facing report and communication record. It
+does not manage the County Department's internal work order or field-work
+process in the current demo.
+
+Regional deployment model
+-------------------------
+The same application can be set up separately in different regions. Each
+regional setup has its own staff credentials, report records, and reference
+codes; regional data is not shared between installations.
+
+Each installation's area and ward list is configured as setup data. Its
+Sub-County Administrator uses the configured list to review reports and does
+not register wards or other regions from the dashboard.
+
+A resident can check a report only in the system where that report was
+submitted. For example, a report submitted through the Karen system cannot
+be found by entering its reference code in the Kasarani system. Moving to a
+different region does not transfer the report or make it visible there.
+
+For this presentation, the one regional setup is Kasarani Sub-County.
+Sample residents are assumed to have visited the Sub-County Administrator's
+physical office, learned about the system, and submitted reports from their
+own devices. The sample reports cover multiple areas within Kasarani
+Sub-County.
+
+The current demo represents one local setup using its demonstration
+database. It does not demonstrate multiple regional installations.
+
+In a real operational process, a Sub-County Administrator may coordinate
+with the appropriate County Department using the County's existing process
+outside this system. The demo does not include department assignment,
+department accounts, or internal work-order tracking. The Sub-County
+Administrator can record report status updates in the demo.
+
+Users and responsibilities
+--------------------------
+
+1. Resident
+   - Does not create an account or log in.
+   - Submits an infrastructure report, including its type and location.
+   - Receives a unique reference code after submission.
+   - Uses that code to check the report status and its public-facing updates.
+   - May provide contact details if the system uses them for communication.
+
+2. Sub-County Administrator
+   - Is the only staff role represented in the current demo.
+   - Logs in using the existing demonstration staff account.
+   - The demo display name is Charles Mutinda (Demo), based on a past
+     Nairobi City County event report identifying Charles Mutinda as
+     Kasarani Sub-County Administrator at that time. This is not his real
+     account or an endorsement, and does not assert that he currently holds
+     the role.
+   - Reviews incoming reports for completeness and the correct location and
+     issue category.
+   - Updates the report status and adds an appropriate resident-facing note.
+
+Main workflow
+-------------
+1. A resident submits a report without creating an account.
+2. The system validates and saves the report and gives the resident a unique
+   reference code.
+3. A Sub-County Administrator logs in and reviews the report.
+4. The administrator may coordinate with a responsible County Department
+   outside this demo system.
+5. The administrator records status changes and notes in this system.
+6. The resident enters the reference code to see the current status and
+   available report history. No resident login is required.
+7. The administrator marks the report resolved after receiving confirmation
+   that the issue has been addressed.
+
+Status lifecycle
+----------------
+The demo's status sequence is:
+
+  Submitted -> Under Review -> In Progress -> Resolved
+
+The Sub-County Administrator is responsible for updating the system status
+in the demo. In a real operational setting, the administrator would base
+status changes on follow-up with the responsible department. "Resolved"
+should be recorded after the administrator has confirmation that the issue
+was addressed. Status notes shown to residents should be clear and should
+not include private internal correspondence.
+
+Scope of the current demo
+-------------------------
+Included:
+- Resident report submission without resident accounts.
+- Unique reference codes and status lookup using those codes.
+- Staff login for Sub-County Administrators.
+- Administrator dashboard for reviewing and filtering reports.
+- Administrator status updates and resident-facing notes.
+- Preconfigured regional areas/wards, report categories, location details,
+  and optional photo attachments.
+- A report history so the resident can follow recorded progress.
+
+Not included in the current demo:
+- Resident accounts.
+- Registering or changing wards from the administrator dashboard.
+- Assigning, dispatching, or tracking department work orders inside this
+  system.
+- Direct integration with County Department systems.
+- Automatic sending of email, SMS, or WhatsApp messages unless a real
+  delivery service is separately implemented and configured.
+- Staff sign-up; the demo uses its existing sample staff account and data.
+
+Communication and privacy
+-------------------------
+The reference code is the resident's means of finding a report without an
+account. Residents should keep it private. The status lookup should show
+only information appropriate for the reporting resident to see.
+
+Contact information should be collected only when needed for the agreed
+resident communication process and handled as private information. The
+current demonstration records a simulated notification attempt; it does not
+actually send a message. The interface must not imply that a message was
+delivered unless real delivery has been implemented and confirmed.
+
+Current implementation and gaps
+--------------------------------
+The existing application already supports unauthenticated report submission,
+reference-code status lookup, a staff dashboard, status history, and a
+generic staff login.
+
+The intended Sub-County Administrator workflow is not fully represented in
+the current implementation:
+- The demo staff display name is "Charles Mutinda (Demo)"; the staff schema
+  does not define a separate role field or associate accounts with a
+  sub-county.
+- Reports are not assigned to a named Sub-County Administrator. Department
+  assignment and follow-up are outside the application and are not tracked
+  as internal work orders.
+- Notification delivery is simulated rather than connected to email, SMS, or
+  WhatsApp.
+- There is no staff sign-up flow; the demo uses the existing sample staff
+  account and seeded demonstration data.
+
+The sample login and seeded reports are for demonstration only. Before a
+real deployment, the participating County must define which Sub-County
+Administrators will use the system, provision or approve their accounts,
+agree on the issue categories and locations, and decide how administrators
+will contact and receive updates from County Departments.
+
+Future extensions
+-----------------
+Future work may add a controlled sign-up or account-provisioning process for
+Sub-County Administrators. Staff access should be limited to authorized
+personnel.
+
+If the County later chooses to bring department work into the system, a
+future extension could add County Department officer and supervisor
+accounts, assignment records, internal notes, deadlines, escalation rules,
+and notifications. These users and features are future extensions; they are
+not part of the current demo.

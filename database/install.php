@@ -14,6 +14,6 @@ foreach (['schema.sql', 'seed.sql'] as $file) {
 
 $c->select_db('local_infra_db');
 $h = password_hash('Officer@123', PASSWORD_DEFAULT);
-$s = $c->prepare("INSERT INTO staff (full_name,username,password_hash,email) VALUES ('Ward Officer','officer1',?,'officer@ward.local')");
+$s = $c->prepare("INSERT INTO staff (full_name,username,password_hash,email) VALUES ('Charles Mutinda (Demo)','officer1',?,'demo@kasarani.invalid')");
 $s->bind_param('s',$h); $s->execute();
-echo "Database ready. Staff login: officer1 / Officer@123\n";
+echo "Database ready. Demo staff login: officer1 / Officer@123\n";
