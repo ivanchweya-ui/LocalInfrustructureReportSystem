@@ -16,21 +16,28 @@ That directory lists sub-counties, not wards. Do not infer ward-to-sub-county as
 2. Create a dedicated MySQL database and user for this sub-county. Grant that user access only to this database, including the schema privileges needed during installation (`CREATE`, `ALTER`, and `INDEX`). Do not use the MySQL root account for a deployed instance. The database must exist before running the installer.
 3. Copy `php/config.local.example.php` to `php/config.local.php`. Set the database credentials and codes from `database/kenya_subcounties.csv`. Use a unique database name for every instance.
 4. Create `database/areas.local.csv` using the county-verified area list and the format in `database/areas.local.example.csv`.
-5. In PowerShell, set the initial system administrator credentials and run the installer. The password prompt below is masked:
+5. Coordinate with the Sub-County office to identify its administrator. During installation, the installation team creates that administrator's account for this specific instance. In PowerShell, enter the account details and run the installer. The password prompt below is masked:
 
    ```powershell
-   $env:SYSTEM_ADMIN_USERNAME = 'systemadmin'
-   $securePassword = Read-Host 'Initial system administrator password' -AsSecureString
-   $env:SYSTEM_ADMIN_PASSWORD = [System.Net.NetworkCredential]::new('', $securePassword).Password
-   $env:SYSTEM_ADMIN_NAME = 'System Administrator'
+   $env:OFFICEADMINUSERNAME = Read-Host 'Sub-County Administrator username'
+   $securePassword = Read-Host 'Sub-County Administrator password' -AsSecureString
+   $env:OFFICEADMINPASSWORD = [System.Net.NetworkCredential]::new('', $securePassword).Password
+   $env:OFFICEADMINNAME = Read-Host 'Sub-County Administrator full name'
+   $env:OFFICEADMINEMAIL = Read-Host 'Administrator email (optional)'
    php database\install.php
-   Remove-Item Env:\SYSTEM_ADMIN_USERNAME,Env:\SYSTEM_ADMIN_PASSWORD,Env:\SYSTEM_ADMIN_NAME -ErrorAction SilentlyContinue
+   Remove-Item Env:\OFFICEADMINUSERNAME,Env:\OFFICEADMINPASSWORD,Env:\OFFICEADMINNAME,Env:\OFFICEADMINEMAIL -ErrorAction SilentlyContinue
    ```
 
-   Use a unique password of at least 16 characters. The installer creates missing tables and categories, records the configured sub-county, imports the verified areas, and creates the first approved system administrator. It does not drop tables, create sample reports, or create demo credentials.
-6. Serve the project through the configured web server and open `report.html`. Verify that the displayed sub-county and area list are correct before sharing the URL.
+   Use a unique password of at least 16 characters and hand the credentials to the administrator securely. The installer creates missing tables and categories, records the configured sub-county, imports the verified areas, and creates the approved Sub-County Administrator account. It does not drop tables, create sample reports, or create demo credentials. Re-running the installer does not reset an existing administrator's password.
+6. Install the PHP mail dependency:
 
-`database/install.php` is CLI-only. `database/schema.sql` uses `CREATE TABLE IF NOT EXISTS`; the installer also adds the account-approval columns when upgrading the earlier schema. It does not clean or migrate existing reports or area records. Back up existing data and review it before reusing an old database; using a new database for a new sub-county is the safer deployment path.
+   ```powershell
+   composer install --no-interaction
+   ```
+
+7. Serve the project through the configured web server and open `report.html`. Verify that the displayed sub-county and area list are correct before sharing the URL.
+
+`database/install.php` is CLI-only. `database/schema.sql` uses `CREATE TABLE IF NOT EXISTS`; the installer upgrades the previous administrator role while retaining approved staff. It does not clean existing reports or area records. Back up existing data and review it before reusing an old database; using a new database for a new sub-county is the safer deployment path.
 
 The local presentation database is `localinfrasystem`, configured for Nairobi
 County and Kasarani Sub-County. The application database user is
@@ -39,19 +46,22 @@ County and Kasarani Sub-County. The application database user is
 ## Staff access
 
 - Residents do not create accounts. They submit a report and use its reference code to check status.
-- A sub-county administrator can request an account through `signup.html`. Requests are stored as pending and cannot log in until approved.
-- The initial system administrator is created during installation and can approve or reject sub-county administrator requests in the dashboard. This administrator belongs to that one installation; there is no shared cross-county admin service.
+- The installation team creates one approved Sub-County Administrator account during installation in coordination with the local office.
+- There is no public staff sign-up, account approval queue, or separate System Administrator account. Each administrator belongs to that installation.
 - Department officers, supervisors, work-order assignment, and internal department workflows are future extensions.
 
 ## Report and communication behavior
 
 - Reference codes include the configured sub-county code and a cryptographically random token (for example `RF-2026-4704-A1B2C3D4E5F60718`); lookup searches only the current installation's database.
 - Report photos are stored in `uploads/`; MySQL stores a relative path.
-- Contact details are optional. No email, SMS, or WhatsApp provider is configured, so residents must save their reference code.
+- The reference code is always shown in the browser. The demo can send email to a local Mailpit test inbox; that is not delivery to a resident's real mailbox. SMS and WhatsApp remain unavailable until their sending integrations and approved providers are in place.
+- The report and status pages show a shareable install QR code. Resident installation requires publishing that sub-county instance at a public HTTPS address; the local XAMPP QR is for this computer only.
 - The administrator dashboard supports report review and status updates. Only areas imported for the configured instance are offered in the resident form.
 
 ## Local configuration and data
 
 - `php/config.local.php` and `database/areas.local.csv` are intentionally excluded from Git. Keep credentials and local deployment data out of commits.
+- Composer dependencies are described by `composer.json` and `composer.lock`; `vendor/` is generated locally.
+- The browser QR encoder is pinned in `package.json` and included locally under `js/vendor/`.
 - `database/seed.sql` inserts only the standard report categories. There are no demo reports or hardcoded staff credentials.
 - `SYSTEM_SCOPE_AND_WORKFLOW.txt` records the agreed product boundary and current operational limitations.

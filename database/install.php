@@ -185,9 +185,12 @@ try {
     $db->set_charset('utf8mb4');
 
     runSqlFile($db, __DIR__ . '/schema.sql');
-    ensureStaffColumn($db, 'role', "ENUM('system_admin','subcounty_admin') NOT NULL DEFAULT 'subcounty_admin'");
-    ensureStaffColumn($db, 'approval_status', "ENUM('pending','approved','rejected') NOT NULL DEFAULT 'pending'");
+    ensureStaffColumn($db, 'role', "ENUM('subcounty_admin') NOT NULL DEFAULT 'subcounty_admin'");
+    ensureStaffColumn($db, 'approval_status', "ENUM('pending','approved','rejected') NOT NULL DEFAULT 'approved'");
     ensureStaffColumn($db, 'created_at', 'DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP');
+    $db->query("UPDATE staff SET role = 'subcounty_admin', approval_status = 'approved' WHERE role = 'system_admin'");
+    $db->query("ALTER TABLE staff MODIFY role ENUM('subcounty_admin') NOT NULL DEFAULT 'subcounty_admin'");
+    $db->query("ALTER TABLE staff MODIFY approval_status ENUM('pending','approved','rejected') NOT NULL DEFAULT 'approved'");
     $db->query('ALTER TABLE reports MODIFY reference_code VARCHAR(32) NOT NULL');
     $db->query("ALTER TABLE reports MODIFY contact_method ENUM('email','phone','whatsapp') NULL");
     $db->query('ALTER TABLE reports MODIFY contact_detail VARCHAR(100) NULL');
@@ -233,32 +236,47 @@ try {
 
     importAreas($db, $areas, $subcountyCode);
 
-    $adminCount = (int) $db->query("SELECT COUNT(*) AS total FROM staff WHERE role = 'system_admin'")->fetch_assoc()['total'];
+    $adminCount = (int) $db->query(
+        "SELECT COUNT(*) AS total FROM staff WHERE role = 'subcounty_admin' AND approval_status = 'approved'"
+    )->fetch_assoc()['total'];
     if ($adminCount === 0) {
-        $username = trim((string) getenv('SYSTEM_ADMIN_USERNAME'));
-        $password = (string) getenv('SYSTEM_ADMIN_PASSWORD');
-        $fullName = trim((string) (getenv('SYSTEM_ADMIN_NAME') ?: 'System Administrator'));
+        $username = trim((string) getenv('OFFICEADMINUSERNAME'));
+        $password = (string) getenv('OFFICEADMINPASSWORD');
+        $fullName = trim((string) getenv('OFFICEADMINNAME'));
+        $email = trim((string) getenv('OFFICEADMINEMAIL'));
         if (!preg_match('/^[A-Za-z0-9._-]{3,50}$/', $username)) {
-            fail('Set SYSTEM_ADMIN_USERNAME to a 3-50 character username using letters, numbers, dots, underscores, or hyphens.');
+            fail('Set OFFICEADMINUSERNAME to a 3-50 character username using letters, numbers, dots, underscores, or hyphens.');
         }
         if (strlen($password) < 16) {
-            fail('Set SYSTEM_ADMIN_PASSWORD to a password of at least 16 characters before creating the first system administrator.');
+            fail('Set OFFICEADMINPASSWORD to a password of at least 16 characters before creating the Sub-County Administrator.');
         }
         if (strlen($fullName) < 2 || strlen($fullName) > 100) {
-            fail('SYSTEM_ADMIN_NAME must be between 2 and 100 characters.');
+            fail('OFFICEADMINNAME must be between 2 and 100 characters.');
+        }
+        if ($email !== '' && (!filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($email) > 100)) {
+            fail('OFFICEADMINEMAIL must be a valid email address of at most 100 characters, or left blank.');
+        }
+        $existingUsername = $db->prepare('SELECT COUNT(*) AS total FROM staff WHERE username = ?');
+        $existingUsername->bind_param('s', $username);
+        $existingUsername->execute();
+        $usernameExists = (int) $existingUsername->get_result()->fetch_assoc()['total'];
+        $existingUsername->close();
+        if ($usernameExists > 0) {
+            fail('That username already belongs to a staff account. Choose a different username for the Sub-County Administrator.');
         }
         $hash = password_hash($password, PASSWORD_DEFAULT);
         $admin = $db->prepare(
-            "INSERT INTO staff (full_name, username, password_hash, subcounty_code, role, approval_status)
-             VALUES (?, ?, ?, ?, 'system_admin', 'approved')"
+            "INSERT INTO staff (full_name, username, password_hash, email, subcounty_code, role, approval_status)
+             VALUES (?, ?, ?, ?, ?, 'subcounty_admin', 'approved')"
         );
-        $admin->bind_param('sssi', $fullName, $username, $hash, $subcountyCode);
+        $admin->bind_param('ssssi', $fullName, $username, $hash, $email, $subcountyCode);
         $admin->execute();
         $admin->close();
-        echo "Created the initial system administrator '$username'." . PHP_EOL;
+        echo "Created the Sub-County Administrator account '$username'." . PHP_EOL;
     }
 
     echo "Installation ready for {$subcounty['subcounty_name']}, {$subcounty['county_name']}." . PHP_EOL;
+    echo "The Sub-County Administrator account for this installation is ready." . PHP_EOL;
     echo "This installer does not drop tables or create sample reports." . PHP_EOL;
 } catch (mysqli_sql_exception $e) {
     fail('Installation failed: ' . $e->getMessage());

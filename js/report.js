@@ -1,6 +1,17 @@
 (async () => {
   const o = await api('php/options.php');
-  if (o.instance) $('instance').textContent = 'Reports are handled by ' + o.instance.subcounty_name + ', ' + o.instance.county_name + '.';
+  const methods = o.notifications || {};
+  const email = $('contact_method').querySelector('option[value="email"]');
+  const phone = $('contact_method').querySelector('option[value="phone"]');
+  const whatsapp = $('contact_method').querySelector('option[value="whatsapp"]');
+  email.disabled = !methods.email || !methods.email.available;
+  phone.disabled = !methods.sms || !methods.sms.available;
+  whatsapp.disabled = !methods.whatsapp || !methods.whatsapp.available;
+  $('notificationHint').textContent = methods.email && methods.email.available && methods.email.testMode
+    ? 'Email is captured in a local test inbox only. SMS and WhatsApp are unavailable in this demo.'
+    : methods.email && methods.email.available
+      ? 'Email is available. SMS and WhatsApp are not configured for this installation.'
+      : 'Notifications are not configured for this installation. Save the reference code shown after submitting.';
   fillSelect($('category_id'), o.categories || [], 'category_id', 'category_name', 'Select category...');
   fillSelect($('area_id'), o.areas || [], 'area_id', a => a.area_name + ' (' + a.region + ' - ' + a.location + ')', 'Select area...');
 })();

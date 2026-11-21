@@ -48,8 +48,8 @@ CREATE TABLE IF NOT EXISTS staff (
     password_hash VARCHAR(255) NOT NULL,
     email VARCHAR(100),
     subcounty_code SMALLINT UNSIGNED NOT NULL,
-    role ENUM('system_admin','subcounty_admin') NOT NULL DEFAULT 'subcounty_admin',
-    approval_status ENUM('pending','approved','rejected') NOT NULL DEFAULT 'pending',
+    role ENUM('subcounty_admin') NOT NULL DEFAULT 'subcounty_admin',
+    approval_status ENUM('pending','approved','rejected') NOT NULL DEFAULT 'approved',
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (subcounty_code) REFERENCES subcounties(subcounty_code)
 );

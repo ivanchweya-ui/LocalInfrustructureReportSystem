@@ -6,4 +6,13 @@ return [
     'db_name' => 'localinfrasystem',
     'county_code' => 0,
     'subcounty_code' => 0,
+    'appUrl' => '',
+    'mailHost' => '',
+    'mailPort' => 587,
+    'mailUsername' => '',
+    'mailPassword' => '',
+    'mailEncryption' => 'tls',
+    'mailFromAddress' => '',
+    'mailFromName' => 'Local Infrastructure Issue Reporter',
+    'mailTestMode' => false,
 ];

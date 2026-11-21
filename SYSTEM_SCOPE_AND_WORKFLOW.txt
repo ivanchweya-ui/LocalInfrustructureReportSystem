@@ -32,21 +32,19 @@ Users and responsibilities
    - Receives a reference code containing the sub-county code.
    - Uses the reference code in the same installation to view status and
      public-facing updates.
-   - Does not need to provide contact information; the current system does
-     not send email, SMS, or WhatsApp messages.
+   - May choose an available notification channel when submitting a report.
+   - Always receives the reference code on screen and should save it if
+     delivery is unavailable or fails.
+   - Opens and installs the resident app from the QR code for the public HTTPS
+     address of the relevant sub-county instance.
 
 2. Sub-County Administrator
-   - Requests an account through the sign-up page.
-   - Cannot log in until a System Administrator approves the request.
+   - Is designated by the Sub-County office during deployment.
+   - Has an account created by the installation team for that specific
+     sub-county while the system is installed at the office.
+   - Receives the initial credentials securely and can log in immediately.
    - Reviews reports, updates the status, and adds a resident-facing note.
    - Does not register wards or access reports from other sub-counties.
-
-3. System Administrator
-   - Is created during installation using credentials supplied by the
-     deployment operator.
-   - Approves or rejects Sub-County Administrator account requests for that
-     single installation.
-   - Is not a shared central account across installations.
 
 Main workflow
 -------------
@@ -54,12 +52,15 @@ Main workflow
    dedicated database for that instance.
 2. The County-verified area list is imported before resident submissions are
    enabled.
-3. The deployment operator creates the initial System Administrator.
-4. A Sub-County Administrator requests an account; it remains pending.
-5. The System Administrator approves or rejects the request.
-6. A resident submits an issue without a login and keeps the returned
-   reference code.
-7. An approved Sub-County Administrator reviews the report and records
+3. The installation team coordinates with the Sub-County office and creates
+   its designated administrator account during installation.
+4. The Sub-County Administrator receives the initial credentials and logs in.
+5. The instance is published at its public HTTPS address and the office shares
+   its QR code with residents.
+6. A resident opens or installs the app, submits an issue without a login,
+   optionally chooses a configured notification channel, and keeps the
+   reference code shown on screen.
+7. The Sub-County Administrator reviews the report and records
    progress and public-facing status notes.
 8. The resident checks the report in the same sub-county installation.
 
@@ -82,19 +83,28 @@ Included:
 - Configurable single county/sub-county identity per database.
 - County-verified area/ward import at installation; no ward-registration
   interface in the administrator dashboard.
-- System Administrator bootstrap during CLI installation.
-- Sub-County Administrator account requests with approval required before
-  login.
+- Sub-County Administrator account bootstrap during CLI installation.
+- Administrator login is available immediately; there is no public staff
+  sign-up or account-approval workflow.
 - Staff dashboard, report filtering, status updates, and status history.
-- Honest feedback that no notification is sent until a delivery provider is
-  implemented and configured.
+- Installable PWA manifest, shareable QR code, and offline page that does not
+  cache reports, reference codes, contact information, or API responses.
+- Email notification through configured SMTP; local demonstration uses
+  Mailpit and captures test messages rather than delivering them to residents.
+- Clear feedback when email delivery fails; the saved report and on-screen
+  reference code remain available.
+- SMS and WhatsApp are disabled until their sending integrations are
+  implemented and approved providers are configured.
 - An attributed 2019 county/sub-county directory for installation setup.
 
 Not included:
 - A shared database or dashboard across sub-counties.
 - Resident accounts.
 - Central cross-instance system administration.
-- Email, SMS, or WhatsApp delivery.
+- Public staff sign-up and administrator account approval workflow.
+- Production email delivery without deployment-specific SMTP configuration.
+- SMS and WhatsApp delivery until sending integrations and approved services
+  are available.
 - Department officer and supervisor accounts.
 - Department assignment, internal work orders, or integrations with County
   Department systems.
@@ -110,7 +120,11 @@ must be checked with the County for current use.
 
 The reference code is the resident's means of finding a report without an
 account. Residents should keep it private. Contact information is optional.
-The current system does not transmit messages through a delivery provider.
+The demo email integration captures messages only in the local Mailpit inbox;
+it does not deliver email to residents. SMS and WhatsApp require implemented
+integrations and configured delivery services. The install QR becomes useful
+to residents only after each sub-county instance is deployed at its own public
+HTTPS address.
 
 Future extensions
 -----------------

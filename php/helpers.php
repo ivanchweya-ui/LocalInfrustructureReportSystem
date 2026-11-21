@@ -18,19 +18,11 @@ function out($data, int $code = 200): void
 
 function need_staff(): void
 {
-    if (empty($_SESSION['staff_id']) || empty($_SESSION['staff_role'])) {
+    if (empty($_SESSION['staff_id'])) {
         out(['success' => false, 'message' => 'Login required'], 401);
     }
     if (empty($_SESSION['csrf_token'])) {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-    }
-}
-
-function need_system_admin(): void
-{
-    need_staff();
-    if ($_SESSION['staff_role'] !== 'system_admin') {
-        out(['success' => false, 'message' => 'System administrator access required'], 403);
     }
 }
 

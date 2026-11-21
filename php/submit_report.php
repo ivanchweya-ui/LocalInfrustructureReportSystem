@@ -1,4 +1,4 @@
-<?php require __DIR__.'/helpers.php';
+<?php require __DIR__.'/helpers.php'; require_once __DIR__.'/notifications.php';
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') out(['success'=>false,'message'=>'POST only'],405);
 $instance=active_instance();
 $cat=(int)($_POST['category_id']??0); $area=(int)($_POST['area_id']??0);
@@ -54,8 +54,9 @@ if (!$db->commit()) {
   error_log('Could not commit report transaction: '.$db->error);
   out(['success'=>false,'message'=>'Could not finish saving the report'],500);
 }
+$notification = sendResidentNotification($method, $detail, $code);
 out([
   'success'=>true,
   'code'=>$code,
-  'message'=>'No email, SMS, or WhatsApp message was sent. Save this reference code to check your report status.',
+  'message'=>$notification['message'],
 ],201);
