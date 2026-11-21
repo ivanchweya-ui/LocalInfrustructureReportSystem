@@ -1,9 +1,11 @@
 const id = new URLSearchParams(location.search).get('id');
+let csrfToken = '';
 const order = ['Submitted', 'Under Review', 'In Progress', 'Resolved'];
 async function load() {
   const d = await api('php/get_report.php?id=' + encodeURIComponent(id));
   if (d.status === 401) return location = 'login.html';
   if (!d.success) return show('msg', d.message || 'Not found', false);
+  csrfToken = d.csrf_token;
   const r = d.report; $('ref').textContent = r.reference_code;
   const box = $('details'); box.replaceChildren();
   add(box, 'h3', 'Report details - ' + r.current_status);
@@ -17,7 +19,7 @@ async function load() {
 }
 $('f').addEventListener('submit', async e => {
   e.preventDefault();
-  const fd = new FormData(e.target); fd.append('report_id', id);
+  const fd = new FormData(e.target); fd.append('report_id', id); fd.append('csrf_token', csrfToken);
   const d = await api('php/update_status.php', { method: 'POST', body: fd });
   show('msg', d.message || 'Failed', d.success);
   if (d.success) load();

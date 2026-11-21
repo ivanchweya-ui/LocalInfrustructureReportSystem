@@ -1,4 +1,6 @@
 <?php require __DIR__.'/helpers.php'; need_staff();
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') out(['success'=>false,'message'=>'POST only'],405);
+require_csrf();
 $id=(int)($_POST['report_id']??0); $new=clean($_POST['new_status']??''); $note=clean($_POST['note']??'');
 $order=['Submitted','Under Review','In Progress','Resolved'];
 $st=$db->prepare("SELECT current_status FROM reports WHERE report_id=?"); $st->bind_param('i',$id); $st->execute();
@@ -10,7 +12,7 @@ if ($new==='Resolved' && strlen($note)<5) out(['success'=>false,'message'=>'Add 
 $db->begin_transaction();
 $u=$db->prepare("UPDATE reports SET current_status=? WHERE report_id=?"); $u->bind_param('si',$new,$id); $ok=$u->execute();
 $sid=$_SESSION['staff_id'];
-$h=$db->prepare("INSERT INTO status_updates (report_id,staff_id,old_status,new_status,resolution_note) VALUES (?,?,?,?,?)");
+$h=$db->prepare("INSERT INTO statusupdates (report_id,staff_id,old_status,new_status,resolution_note) VALUES (?,?,?,?,?)");
 $h->bind_param('iisss',$id,$sid,$old,$new,$note); $ok=$ok && $h->execute();
 if (!$ok) { $db->rollback(); out(['success'=>false,'message'=>'Could not save the update'],500); }
 $db->commit();

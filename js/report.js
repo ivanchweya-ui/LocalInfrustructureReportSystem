@@ -1,5 +1,6 @@
 (async () => {
   const o = await api('php/options.php');
+  if (o.instance) $('instance').textContent = 'Reports are handled by ' + o.instance.subcounty_name + ', ' + o.instance.county_name + '.';
   fillSelect($('category_id'), o.categories || [], 'category_id', 'category_name', 'Select category...');
   fillSelect($('area_id'), o.areas || [], 'area_id', a => a.area_name + ' (' + a.region + ' - ' + a.location + ')', 'Select area...');
 })();
@@ -9,8 +10,8 @@ $('f').addEventListener('submit', async e => {
   if (!$('category_id').value) err.push('Choose a category');
   if (!$('area_id').value) err.push('Choose an area');
   if ($('description').value.trim().length < 10) err.push('Description must be at least 10 characters');
-  if (!m) err.push('Choose how to receive your code');
-  else if (m === 'email' ? !/^\S+@\S+\.\S+$/.test(c) : !/^(\+?254|0)[17]\d{8}$/.test(c.replace(/\s+/g, ''))) err.push('Enter a valid ' + (m === 'email' ? 'email address' : 'Kenyan phone number'));
+  if ((m && !c) || (!m && c)) err.push('Choose a contact method and enter its contact detail, or leave both blank');
+  else if (m && (m === 'email' ? !/^\S+@\S+\.\S+$/.test(c) : !/^(\+?254|0)[17]\d{8}$/.test(c.replace(/\s+/g, '')))) err.push('Enter a valid ' + (m === 'email' ? 'email address' : 'Kenyan phone number'));
   if (err.length) return show('msg', err.join('. '), false);
   const d = await api('php/submit_report.php', { method: 'POST', body: new FormData(e.target) });
   show('msg', d.success ? 'Report submitted.' : (d.message || 'Something went wrong'), d.success);
