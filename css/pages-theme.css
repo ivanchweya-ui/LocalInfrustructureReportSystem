@@ -1,0 +1,34 @@
+:root { --road:#1f2937; --cone:#f97316; --hazard:#facc15; }
+
+body {
+  background-color:#f3f4f6;
+  background-image:url("infra-bg.svg");
+  background-repeat:no-repeat;
+  background-position:center bottom;
+  background-size:cover;
+  background-attachment:fixed;
+}
+
+header { position:relative; background:var(--road); padding-bottom:20px; }
+header::after {
+  content:""; position:absolute; left:0; right:0; bottom:0; height:6px;
+  background:repeating-linear-gradient(45deg,#facc15 0 12px,#111827 12px 24px);
+}
+nav a.on { color:var(--hazard); font-weight:700; }
+
+h2, h3 { color:#111827; }
+.hint { color:#374151; }
+
+main form, .card {
+  background:rgba(255,255,255,.93);
+  border-left:6px solid var(--cone);
+  border-radius:8px; padding:16px;
+  box-shadow:0 2px 8px rgba(0,0,0,.12);
+}
+.card form { background:none; border:0; padding:0; box-shadow:none; }
+
+input:focus, select:focus, textarea:focus { outline:2px solid var(--cone); }
+
+main button { background:var(--cone); }
+main button:hover { background:#ea580c; }
+main button.alt { background:#6b7280; }
