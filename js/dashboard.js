@@ -8,6 +8,7 @@ async function load() {
   const d = await api('php/dashboard.php?' + q);
   if (d.status === 401) return location = 'login.html';
   $('who').textContent = d.staff;
+  $('instance').textContent = d.instance ? d.instance.subcounty_name + ', ' + d.instance.county_name : '';
   const s = d.summary, st = $('stats'); st.replaceChildren();
   [['Total', s.total], ['Submitted', s.submitted], ['Under Review', s.review], ['In Progress', s.progress], ['Resolved', s.resolved]].forEach(([l, v]) => {
     const c = document.createElement('div'); c.className = 'card stat'; add(c, 'strong', v || 0); add(c, 'span', l); st.append(c);

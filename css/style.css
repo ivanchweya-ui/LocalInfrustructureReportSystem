@@ -1,6 +1,7 @@
 *{box-sizing:border-box}body{font-family:Segoe UI,Arial,sans-serif;margin:0;background:#f4f6f8;color:#1a1a1a}
 header{background:#1b3a5c;color:#fff;padding:14px 24px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px}
 header h1{font-size:18px;margin:0}nav a,nav button{color:#fff;margin-left:16px;text-decoration:none;background:none;border:0;font:inherit;cursor:pointer}nav a.on{font-weight:700;text-decoration:underline}
+.brand{display:grid;gap:10px}.app-share{display:flex;align-items:center;gap:12px;max-width:380px;padding:8px;background:#234b72;border-radius:6px}.app-share>div:first-child{flex:0 0 112px;min-height:112px;background:#fff;padding:4px}.app-share img,.app-share canvas{display:block;max-width:100%;height:auto}.app-share strong{font-size:14px}.app-share p{margin:5px 0;color:#e5edf5;font-size:12px}.app-share button{margin:4px 0 0;padding:6px 10px;font-size:13px}
 main{max-width:860px;margin:24px auto;padding:0 16px}h2{color:#1b3a5c}.hint{color:#777}
 label{display:block;font-weight:600;margin:14px 0 0}input,select,textarea{display:block;width:100%;padding:9px;margin-top:4px;border:1px solid #999;border-radius:4px;font:inherit}
 button{padding:10px 22px;margin:16px 8px 0 0;background:#2e8b8b;color:#fff;border:0;border-radius:4px;font:inherit;cursor:pointer}button.alt{background:#fff;color:#333;border:1px solid #777}

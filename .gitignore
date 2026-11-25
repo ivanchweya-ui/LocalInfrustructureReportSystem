@@ -2,3 +2,7 @@ uploads/*
 !uploads/.gitkeep
 logs/*
 !logs/.gitkeep
+php/config.local.php
+database/areas.local.csv
+vendor/
+node_modules/

@@ -1,9 +1,11 @@
 <?php require __DIR__.'/helpers.php';
 $u=clean($_POST['username']??''); $p=(string)($_POST['password']??'');
 if ($u===''||$p==='') out(['success'=>false,'message'=>'Enter username and password'],422);
-$st=$db->prepare("SELECT staff_id,full_name,password_hash FROM staff WHERE username=?");
+$st=$db->prepare("SELECT staff_id,full_name,password_hash FROM staff WHERE username=? AND approval_status='approved'");
 $st->bind_param('s',$u); $st->execute(); $row=$st->get_result()->fetch_assoc();
 if (!$row || !password_verify($p,$row['password_hash'])) out(['success'=>false,'message'=>'Invalid username or password'],401);
 session_regenerate_id(true);
-$_SESSION['staff_id']=$row['staff_id']; $_SESSION['staff_name']=$row['full_name'];
+$_SESSION['staff_id']=$row['staff_id'];
+$_SESSION['staff_name']=$row['full_name'];
+$_SESSION['csrf_token']=bin2hex(random_bytes(32));
 out(['success'=>true,'name'=>$row['full_name']]);

@@ -1,0 +1,24 @@
+{
+  "name": "Local Infrastructure Issue Reporter",
+  "short_name": "Infrastructure Reporter",
+  "description": "Report local infrastructure issues and track their progress.",
+  "start_url": "./report.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f6f8",
+  "theme_color": "#1b3a5c",
+  "icons": [
+    {
+      "src": "./icons/app-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/app-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
